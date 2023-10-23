@@ -2,39 +2,32 @@ package encryption;
 import java.io.PrintWriter; // shorten future calls to PrintWriter
 
 public class CaesarCipher {
-	/** Returns the string given, encrypted/shifted by the key n. */
-	static char[] encrypt (char[] plainText, int n) { 
+	/** Apply the caesar cipher with the given text and key n. */
+	static char[] caesar (char[] text, int n) {
 		// declare a string to add encrypted characters to
-		char[] returnString = new char[plainText.length];
+		char[] returnString = new char[text.length];
 		
 		// loop through the string, shifting values with the key
-		for (int i = 0; i < plainText.length; i ++) {
+		for (int i = 0; i < text.length; i ++) {
 			// convert the character to base-26, then offset by n
-			int convertedCh = ((plainText[i] - 'a') + n) % 26;
+			int convertedCh = ((text[i] - 'a') + n) % 26;
+			if (convertedCh < 0) convertedCh = convertedCh + 26;
 			
 			// store the encypted character in the string
 			returnString[i] = (char) (convertedCh + 'a');
 		} // for (int i = 0; i < text.length; i ++)
 
 		return returnString;
+	} // caesar (char[], int)
+	
+	/** Returns the string given, encrypted/shifted by the key n. */
+	static char[] encrypt (char[] plainText, int n) { 
+		return caesar(plainText, n);
 	} // encrypt (char[], int)
 	
 	/** Returns the string given, decrypted/shifted by the key n. */
 	static char[] decrypt (char[] cipherText, int n) {
-		// declare a string to add decrypted characters to
-		char[] returnString = new char[cipherText.length];
-		
-		// loop through the string, shifting values with the key
-		for (int i = 0; i < cipherText.length; i ++) {
-			// convert the character to base-26, then offset by n
-			int convertedCh = ((cipherText[i] - 'a') - n);
-			if (convertedCh < 0) convertedCh = convertedCh + 26;
-			
-			// store the decrypted character in the string
-			returnString[i] = (char) (convertedCh + 'a');
-		} // for (int i = 0; i < text.length; i ++)
-
-		return returnString;
+		return caesar(cipherText, (-1 * n));
 	} // decrypt (char[], int)
 	
 	public static void main (String[] args) throws Exception {
@@ -69,7 +62,8 @@ public class CaesarCipher {
 	/** 
 	 * Prints an error message to stderr according to the errorCode given,
 	 * then exits with the same error code.
-	 * @param errorCode a code corresponding to an user input error */
+	 * @param errorCode a code corresponding to an user input error 
+	 */
 	static void errorMsg (int errorCode) {
 		// define a print writer object directed to stderr
 		PrintWriter penErr = new PrintWriter(System.err, true);
